@@ -22,3 +22,7 @@
 * stop_words
 * dateparser
 * locale
+
+Пообщаться с ботом
+-------------------------
+t.me/RBKnewsBot
