@@ -25,5 +25,5 @@
 
 Пообщаться с ботом
 -------------------------
-https://t.me/RBKnewsBot
-@RBKnewsBot
+* https://t.me/RBKnewsBot
+* @RBKnewsBot
