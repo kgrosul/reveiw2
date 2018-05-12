@@ -26,3 +26,4 @@
 Пообщаться с ботом
 -------------------------
 https://t.me/RBKnewsBot
+@RBKnewsBot
