@@ -7,6 +7,7 @@ from data_base import Topic, Document, Tag, \
 from collections import defaultdict
 import re
 import json
+import config
 
 
 updated_topics = set()
@@ -18,7 +19,7 @@ def parse_and_save_topics():
     :return: None
     """
     session = requests.Session()
-    session.max_redirects = 100
+    session.max_redirects = config.redirects
     data = BeautifulSoup(session.get("https://www.rbc.ru/story/").text, 'lxml')
     # собираем все темы
     topics = data.find_all('div', {'class': 'item item_story js-story-item'})
@@ -47,7 +48,7 @@ def get_document_text_and_tags(url):
              а по ключу tag - кортеж тегов
     """
     session = requests.Session()
-    session.max_redirects = 100
+    session.max_redirects = config.redirects
     data = BeautifulSoup(session.get(url).text, 'lxml')
     paragraphs = data.find_all('p')
     text = ' '.join(map(lambda paragraph: paragraph.text, paragraphs))
@@ -68,16 +69,27 @@ def calculate_statistic(text):
     :return: словарь, в котором по ключу length находитcя распределение длин,
              а по ключу occurrence - распределение встречаемости
     """
-    words = re.findall(r'[\w,-]+', text)
+    words = re.findall(r'\w+', text)
     lengths = defaultdict(lambda: 0)
     occurrences_per_word = defaultdict(lambda: 0)
     occurrences = defaultdict(lambda: 0)
+
     for word in words:
         lengths[len(word)] += 1
         occurrences_per_word[word] += 1
 
+    # Cчитаем среднеквадратичное отклонение
+    avg_occurrences_num = sum(occurrences_per_word.values())/len(occurrences_per_word)
+    deviation = 0
     for word in occurrences_per_word:
-        occurrences[occurrences_per_word[word]] += 1
+        deviation += (avg_occurrences_num - occurrences_per_word[word])**2
+
+    deviation = (deviation/len(occurrences_per_word))**0.5
+    print(deviation)
+    for word in occurrences_per_word:
+        # Учитываем только те слова, значение для которых попадают нужный промежуток частотности
+        if abs(avg_occurrences_num - occurrences_per_word[word]) < 3*deviation:
+            occurrences[occurrences_per_word[word]] += 1
 
     max_length = max(lengths.keys()) + 1
 
@@ -123,7 +135,7 @@ def save_topic_statistic(topic_name):
                                         where(Topic.name == topic_name))
     avg_length = 0
     for document in documents:
-        avg_length += len(re.findall(r'[\w,-]+', document.text))
+        avg_length += len(re.findall(r'\w+', document.text))
     try:
         avg_length /= len(documents)
     except ZeroDivisionError:
@@ -158,7 +170,7 @@ def parse_ans_save_documents(topic_name):
 
     topic_url = topic.get().url
     session = requests.Session()
-    session.max_redirects = 100
+    session.max_redirects = config.redirects
     data = BeautifulSoup(session.get(topic_url).text, 'lxml')
     documents = data.\
         find_all('div', {'class': 'item item_story-single js-story-item'})
