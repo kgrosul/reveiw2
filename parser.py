@@ -19,7 +19,7 @@ def parse_and_save_topics():
     :return: None
     """
     session = requests.Session()
-    session.max_redirects = config.redirects
+    session.max_redirects = config.REDIRECTS
     data = BeautifulSoup(session.get("https://www.rbc.ru/story/").text, 'lxml')
     # собираем все темы
     topics = data.find_all('div', {'class': 'item item_story js-story-item'})
@@ -48,7 +48,7 @@ def get_document_text_and_tags(url):
              а по ключу tag - кортеж тегов
     """
     session = requests.Session()
-    session.max_redirects = config.redirects
+    session.max_redirects = config.REDIRECTS
     data = BeautifulSoup(session.get(url).text, 'lxml')
     paragraphs = data.find_all('p')
     text = ' '.join(map(lambda paragraph: paragraph.text, paragraphs))
@@ -170,7 +170,7 @@ def parse_ans_save_documents(topic_name):
 
     topic_url = topic.get().url
     session = requests.Session()
-    session.max_redirects = config.redirects
+    session.max_redirects = config.REDIRECTS
     data = BeautifulSoup(session.get(topic_url).text, 'lxml')
     documents = data.\
         find_all('div', {'class': 'item item_story-single js-story-item'})
