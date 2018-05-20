@@ -190,8 +190,7 @@ def get_best_words(topic_name, number):
     morph = pymorphy2.MorphAnalyzer()
     for word in words:
         morph_information = morph.parse(word)[0]
-        if 'NOUN' in morph_information.tag or 'UNKN' in morph_information.tag and \
-                str(morph_information.normal_form) not in 'пашинянин новое':
+        if 'NOUN' in morph_information.tag or 'UNKN' in morph_information.tag:
             word_occurrence[str(morph_information.normal_form)] += 1
 
     word_list = [word for word in word_occurrence]
