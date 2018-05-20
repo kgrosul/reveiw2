@@ -106,9 +106,6 @@ def show_statistic(message):
     :param message: сообщение, в котором содержится информация о чате
     :return: None
     """
-    plot1_file_name = 'plot1' + str(message.chat.id) + '.png'
-    plot2_file_name = 'plot2' + str(message.chat.id) + '.png'
-    word_cloud_file_name = 'wcloud' + str(message.chat.id) + '.png'
     if user_request[message.chat.id] == 'describe_topic':
         statistic_type = 'topic'
     else:
@@ -118,6 +115,10 @@ def show_statistic(message):
                                            statistic_type,
                                            plot1_file_name,
                                            plot2_file_name):
+        
+        plot1_file_name = 'plot1' + str(message.chat.id) + '.png'
+        plot2_file_name = 'plot2' + str(message.chat.id) + '.png'
+        word_cloud_file_name = 'wcloud' + str(message.chat.id) + '.png'
         
         if statistic_type == 'topic':
             
@@ -130,13 +131,19 @@ def show_statistic(message):
                              "Всего документов: " +
                              str(make_request.
                                  get_documents_number(message.text)))
+            make_request.topic_word_cloud(message.text,
+                                      word_cloud_file_name)
+        else:
+            
+            make_request.document_word_cloud(message.text,
+                                      word_cloud_file_name)
 
         with open(plot1_file_name, 'rb') as plot1:
             bot.send_photo(message.chat.id, plot1)
         with open(plot2_file_name, 'rb') as plot2:
             bot.send_photo(message.chat.id, plot2)
-        make_request.topic_word_cloud(message.text,
-                                      word_cloud_file_name)
+            
+        
         with open(word_cloud_file_name, 'rb') as word_cloud:
             bot.send_photo(message.chat.id, word_cloud)
         os.remove(plot1_file_name)
