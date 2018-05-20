@@ -3,201 +3,222 @@ import make_request
 import requests
 from collections import defaultdict
 import os
+import config
 
 
 user_request = defaultdict(lambda: None)
 bot = telebot.TeleBot('582824205:AAGaNsND2bCU6XtJ_x9VQjpzd0dNfqq3yhA')
 
 
-def send_new_docs(message):
+def send_new_docs(chat_id, str_number):
     """
-    Отпраляет самые свежие документы
-    :param message: сообщение, на которое надо ответить
+    Отправляет заданному пользователю определенное количество самых свежих новостей 
+    или, если необходимо, просьбу ввести корректные данные 
+    :param chat_id: id пользователя
+    :param str_number: количество новостей
     :return: None
     """
-    if message.text.isdigit():
-        documents = make_request.get_fresh_news(int(message.text))
+    if str_number == '':
+        str_number = str(config.DEFAULT_NEW_DOCS)
+    if str_number.isdigit():
+        documents = make_request.get_fresh_news(int(str_number))
         for i in range(len(documents)):
             response_text = str(i + 1) + ". " + documents[i].title + \
                             "\n\n" + documents[i].url
-            bot.send_message(message.chat.id, response_text)
+            bot.send_message(chat_id, response_text)
+        del user_request[chat_id]
     else:
-        bot.send_message(message.chat.id,
+        bot.send_message(chat_id,
                          "Введите корректное число")
 
 
-def send_new_topics(message):
+def send_new_topics(chat_id, str_number):
     """
-    Отпраляет самые свежие темы
-    :param message: сообщение, на которое надо ответить
+    Отправляет заданному пользователю определенное количество самых свежих тем
+    или, если необходимо, просьбу ввести корректные данные 
+    :param chat_id: id пользователя
+    :param str_number: количество тем
     :return: None
     """
-    if message.text.isdigit():
-        topics = make_request.get_fresh_topics(int(message.text))
+    if str_number == '':
+        str_number = str(config.DEFAULT_NEW_TOPICS)
+    if str_number.isdigit():
+        topics = make_request.get_fresh_topics(int(str_number))
 
         for i in range(len(topics)):
             response_text = str(i + 1) + ". " + topics[i].name + \
                             "\n\n" + topics[i].url
-            bot.send_message(message.chat.id, response_text)
+            bot.send_message(chat_id, response_text)
+        del user_request[chat_id]
+
     else:
-        bot.send_message(message.chat.id,
+        bot.send_message(chat_id,
                          "Введите корректное число")
 
 
-def send_topic_description(message):
+def send_topic_description(chat_id, topic_name):
     """
-    Отпраляет описание темы и 5 свежих новостей из нее
-    :param message: сообщение, на которое надо ответить
+    Отправляет заданному пользователю описание определенной темы
+    или, если необходимо, просьбу ввести корректные данные 
+    :param chat_id: id пользователя
+    :param topic_name: название темы
     :return: None
     """
-    description = make_request.get_topic_description(message.text)
+    description = make_request.get_topic_description(topic_name)
 
     if description is not None:
-        response_text = message.text + '\n\n' + description
-        bot.send_message(message.chat.id, response_text)
-        documents = make_request.get_topic_fresh_news(message.text, 5)
+        response_text = topic_name + '\n\n' + description
+        bot.send_message(chat_id, response_text)
+        documents = make_request.get_topic_fresh_news(topic_name, config.DEFAULT_NEW_DOCS)
 
         for i in range(len(documents)):
             response_text = str(i + 1) + ". " + documents[i].title + \
                             "\n\n" + documents[i].url
-            bot.send_message(message.chat.id, response_text)
+            bot.send_message(chat_id, response_text)
+        del user_request[chat_id]
+
 
     else:
-        bot.send_message(message.chat.id,
+        bot.send_message(chat_id,
                          "Введите корректное название темы")
 
 
-def send_words(message):
+def send_words(chat_id, topic_name):
     """
-    Отпраляет 5 слов лучше всего описывающих данную тему
-    :param message: сообщение, на которое надо ответить
+    Отправляет заданному пользователю 5 слов лушче всего описывающих тем
+    или, если необходимо, просьбу ввести корректные данные 
+    :param chat_id: id пользователя
+    :param topic_name: название темы
     :return: None
     """
-    tags = make_request.get_best_words(message.text, 5)
+    words = make_request.get_best_words(topic_name, 5)
 
-    if tags is not None:
-        response_text = message.text + '\n\n' + '\n'.join(tags)
-        bot.send_message(message.chat.id, response_text)
+    if words is not None:
+        response_text = topic_name + '\n\n' + '\n'.join(words)
+        bot.send_message(chat_id, response_text)
+        del user_request[chat_id]
+
     else:
-        bot.send_message(message.chat.id,
+        bot.send_message(chat_id,
                          "Введите корректное название темы")
 
 
-def send_doc_text(message):
+def send_doc_text(chat_id, doc_title):
     """
-    Отпраляет текст документа
-    :param message: сообщение, на которое надо ответить
+    Отправляет заданному пользователю текст документа
+    или, если необходимо, просьбу ввести корректные данные 
+    :param chat_id: id пользователя
+    :param doc_title: название темы
     :return: None
     """
-    text = make_request.get_document_text(message.text)
+    text = make_request.get_document_text(doc_title)
 
     if text is not None:
-        response_text = message.text + '\n\n' + text
-        bot.send_message(message.chat.id, response_text)
+        response_text = doc_title + '\n\n' + text
+        bot.send_message(chat_id, response_text)
+        del user_request[chat_id]
 
     else:
-        bot.send_message(message.chat.id,
+        bot.send_message(chat_id,
                          "Введите корректное название документа")
 
 
-def show_statistic(message):
+def show_statistic(chat_id, item_title):
     """
-    Отпраляет статистику по теме или документу
-    :param message: сообщение, на которое надо ответить
+    Отправляет заданному пользователю статистику по теме или по документу
+    или, если необходимо, просьбу ввести корректные данные 
+    :param chat_id: id пользователя
+    :param item_title: название темы/документа
     :return: None
     """
-    if user_request[message.chat.id] == 'describe_topic':
+    if user_request[chat_id] == 'describe_topic':
         statistic_type = 'topic'
     else:
         statistic_type = 'document'
-         
-    plot1_file_name = 'plot1' + str(message.chat.id) + '.png'
-    plot2_file_name = 'plot2' + str(message.chat.id) + '.png'
-    word_cloud_file_name = 'wcloud' + str(message.chat.id) + '.png'
-        
-    if make_request.make_distribution_plot(message.text,
+
+    plot1_file_name = 'plot1_' + str(chat_id) + '.png'
+    plot2_file_name = 'plot2_' + str(chat_id) + '.png'
+    word_cloud_file_name = 'wcloud' + str(chat_id) + '.png'
+
+    if make_request.make_distribution_plot(item_title,
                                            statistic_type,
                                            plot1_file_name,
                                            plot2_file_name):
         if statistic_type == 'topic':
-            
-            bot.send_message(message.chat.id,
-                             "Средняя длина документа: " + 
-                             str(make_request.
-                                 get_avg_document_len(message.text)))
 
-            bot.send_message(message.chat.id,
+            bot.send_message(chat_id,
+                             "Средняя длина документа: " +
+                             str(make_request.
+                                 get_avg_document_len(item_title)))
+
+            bot.send_message(chat_id,
                              "Всего документов: " +
                              str(make_request.
-                                 get_documents_number(message.text)))
-            make_request.topic_word_cloud(message.text,
-                                      word_cloud_file_name)
+                                 get_documents_number(item_title)))
+            make_request.topic_word_cloud(item_title,
+                                          word_cloud_file_name)
         else:
-            
-            make_request.document_word_cloud(message.text,
-                                      word_cloud_file_name)
+
+            make_request.document_word_cloud(item_title,
+                                             word_cloud_file_name)
 
         with open(plot1_file_name, 'rb') as plot1:
-            bot.send_photo(message.chat.id, plot1)
+            bot.send_photo(chat_id, plot1)
         with open(plot2_file_name, 'rb') as plot2:
-            bot.send_photo(message.chat.id, plot2)
-            
-        
+            bot.send_photo(chat_id, plot2)
+
         with open(word_cloud_file_name, 'rb') as word_cloud:
-            bot.send_photo(message.chat.id, word_cloud)
+            bot.send_photo(chat_id, word_cloud)
         os.remove(plot1_file_name)
         os.remove(plot2_file_name)
         os.remove(word_cloud_file_name)
-        
+        del user_request[chat_id]
+
     else:
-        bot.send_message(message.chat.id,
+        bot.send_message(chat_id,
                          "Введите корректное название")
 
-replies = {'new_docs': 'Сколько документов надо вывести?',
-           'new_topics': 'Сколько тем надо вывести?',
-           'topic': 'Описание какой темы вы хотите узнать?',
-           'words': 'Cлова для какой темы вы хотите узнать?',
-           'doc': 'Текст какого документа надо вывести?',
-           'describe_doc': 'Статистику по какому документу надо вывести?',
-           'describe_topic': 'Статистику по какой теме надо вывести?'}
+# каждая команда переданная боту влечет за собой вызов определенной функциц
+commands = {'new_docs': 'send_new_docs(message.chat.id, argument)',
+            'new_topics': 'send_new_topics(message.chat.id, argument)',
+            'topic': 'send_topic_description(message.chat.id, argument)',
+            'words': 'send_words(message.chat.id, argument)',
+            'doc': 'send_doc_text(message.chat.id, argument)',
+            'describe_doc': 'show_statistic(message.chat.id, argument)',
+            'describe_topic': 'show_statistic(message.chat.id, argument)'}
 
 
 @bot.message_handler(commands=['new_docs', 'new_topics', 'topic', 'words',
                                'doc', 'describe_doc', 'describe_topic'])
-def reply_to_new_docs(message):
+def reply(message):
+    """Обрабатываем сообщения, которые начинаются с команды"""
     status = message.text.split()[0][1:]
     user_request[message.chat.id] = status
-    bot.send_message(message.chat.id, replies[status])
+    argument = message.text[len(status)+1:].strip()
+    eval(commands[user_request[message.chat.id]])
 
 
 @bot.message_handler(commands=['help', 'start'])
-def reply_to_describe_topic(message):
+def reply_to_help_start(message):
+    """Выводим справку"""
     text = "Привет! Вот что умеет бот:\n" + \
-            "/help - список возможностей\n" + \
-            "/new_docs - самые свежие новости\n" + \
-            "/new_topics - самые свежие темы\n" + \
-            "/topic - описание темы\n" + \
-            "/words - 5 слов лучше всего описывающих тему\n" + \
-            "/doc - текст документа\n" + \
-            "/describe_doc - статистика по документу\n" + \
-            "/describe_topic - статистика по теме"
+           "/help - список возможностей\n" + \
+           "/new_docs - самые свежие новости\n" + \
+           "/new_topics - самые свежие темы\n" + \
+           "/topic - описание темы\n" + \
+           "/words - 5 слов лучше всего описывающих тему\n" + \
+           "/doc - текст документа\n" + \
+           "/describe_doc - статистика по документу\n" + \
+           "/describe_topic - статистика по теме"
     bot.send_message(message.chat.id, text)
-
-
-commands = {'new_docs': 'send_new_docs(message)',
-            'new_topics': 'send_new_topics(message)',
-            'topic': 'send_topic_description(message)',
-            'words': 'send_words(message)',
-            'doc': 'send_doc_text(message)',
-            'describe_doc': 'show_statistic(message)',
-            'describe_topic': 'show_statistic(message)'}
 
 
 @bot.message_handler(content_types=['text'])
 def reply_to_text(message):
+    """Обрабатываем сообщения без команды в начале"""
     if message.chat.id in user_request:
+        argument = message.text.strip()
         eval(commands[user_request[message.chat.id]])
-        del user_request[message.chat.id]
     else:
         bot.send_message(message.chat.id, "Введите комнаду")
 
