@@ -12,10 +12,6 @@ import config
 import stop_words
 import pymorphy2
 import re
-
-
-matplotlib.use('Agg')
-
 import matplotlib.pyplot as plt
 
 
@@ -249,6 +245,3 @@ def document_word_cloud(document_title, file_name):
     text = document.get().text
     make_word_cloud(text, file_name)
     return True
-
-
-print(get_best_words("Война санкций", 5))
