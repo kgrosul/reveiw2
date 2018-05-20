@@ -12,8 +12,8 @@ bot = telebot.TeleBot('582824205:AAGaNsND2bCU6XtJ_x9VQjpzd0dNfqq3yhA')
 
 def send_new_docs(chat_id, str_number):
     """
-    Отправляет заданному пользователю определенное количество самых свежих новостей 
-    или, если необходимо, просьбу ввести корректные данные 
+    Отправляет заданному пользователю определенное количество самых свежих новостей
+    или, если необходимо, просьбу ввести корректные данные
     :param chat_id: id пользователя
     :param str_number: количество новостей
     :return: None
@@ -35,7 +35,7 @@ def send_new_docs(chat_id, str_number):
 def send_new_topics(chat_id, str_number):
     """
     Отправляет заданному пользователю определенное количество самых свежих тем
-    или, если необходимо, просьбу ввести корректные данные 
+    или, если необходимо, просьбу ввести корректные данные
     :param chat_id: id пользователя
     :param str_number: количество тем
     :return: None
@@ -59,7 +59,7 @@ def send_new_topics(chat_id, str_number):
 def send_topic_description(chat_id, topic_name):
     """
     Отправляет заданному пользователю описание определенной темы
-    или, если необходимо, просьбу ввести корректные данные 
+    или, если необходимо, просьбу ввести корректные данные
     :param chat_id: id пользователя
     :param topic_name: название темы
     :return: None
@@ -77,7 +77,6 @@ def send_topic_description(chat_id, topic_name):
             bot.send_message(chat_id, response_text)
         del user_request[chat_id]
 
-
     else:
         bot.send_message(chat_id,
                          "Введите корректное название темы")
@@ -86,12 +85,12 @@ def send_topic_description(chat_id, topic_name):
 def send_words(chat_id, topic_name):
     """
     Отправляет заданному пользователю 5 слов лушче всего описывающих тем
-    или, если необходимо, просьбу ввести корректные данные 
+    или, если необходимо, просьбу ввести корректные данные
     :param chat_id: id пользователя
     :param topic_name: название темы
     :return: None
     """
-    words = make_request.get_best_words(topic_name, 5)
+    words = make_request.get_best_words(topic_name, config.BEST_WORDS_NUM)
 
     if words is not None:
         response_text = topic_name + '\n\n' + '\n'.join(words)
@@ -106,7 +105,7 @@ def send_words(chat_id, topic_name):
 def send_doc_text(chat_id, doc_title):
     """
     Отправляет заданному пользователю текст документа
-    или, если необходимо, просьбу ввести корректные данные 
+    или, если необходимо, просьбу ввести корректные данные
     :param chat_id: id пользователя
     :param doc_title: название темы
     :return: None
@@ -126,7 +125,7 @@ def send_doc_text(chat_id, doc_title):
 def show_statistic(chat_id, item_title):
     """
     Отправляет заданному пользователю статистику по теме или по документу
-    или, если необходимо, просьбу ввести корректные данные 
+    или, если необходимо, просьбу ввести корректные данные
     :param chat_id: id пользователя
     :param item_title: название темы/документа
     :return: None
