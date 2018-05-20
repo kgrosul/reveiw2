@@ -132,9 +132,10 @@ def make_distribution_plot(title_or_name, object, file_name1, file_name2):
     plt.savefig(file_name1)
     plt.close()
 
-    make_plot(data=[0] + json.loads(statistic.get().
-                              occurrences_distribution)[config.min_occurrence:
-                                                        config.max_occurrence],
+    make_plot(data=[0] + json.
+              loads(statistic.get().
+                    occurrences_distribution)[config.MIN_OCCURRENCE:
+                                              config.MAX_OCCURRENCE],
               label="Распределение частот слов",
               xlabel='Встречаемость слова',
               ylabel='Количество слов с такой встречаемостью'
@@ -189,7 +190,8 @@ def get_best_words(topic_name, number):
     morph = pymorphy2.MorphAnalyzer()
     for word in words:
         morph_information = morph.parse(word)[0]
-        if 'NOUN' in morph_information.tag or 'UNKN' in morph_information.tag:
+        if 'NOUN' in morph_information.tag or 'UNKN' in morph_information.tag and \
+                str(morph_information.normal_form) not in 'пашинянин новое':
             word_occurrence[str(morph_information.normal_form)] += 1
 
     word_list = [word for word in word_occurrence]
@@ -205,9 +207,10 @@ def make_word_cloud(text, file_name):
     :return: None
     """
     stopwords = set(stop_words.get_stop_words('ru'))
-    word_cloud = wordcloud.WordCloud(max_words=config.cloud_max_words,
-                                     height=config.picture_height,
-                                     width=config.picture_width,
+
+    word_cloud = wordcloud.WordCloud(max_words=config.CLOUD_MAX_WORDS,
+                                     height=config.PICTURE_HEIGHT,
+                                     width=config.PICTURE_WIDTH,
                                      background_color='white',
                                      stopwords=stopwords).generate(text)
 
