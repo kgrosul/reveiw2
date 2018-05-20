@@ -111,15 +111,14 @@ def show_statistic(message):
     else:
         statistic_type = 'document'
          
+    plot1_file_name = 'plot1' + str(message.chat.id) + '.png'
+    plot2_file_name = 'plot2' + str(message.chat.id) + '.png'
+    word_cloud_file_name = 'wcloud' + str(message.chat.id) + '.png'
+        
     if make_request.make_distribution_plot(message.text,
                                            statistic_type,
                                            plot1_file_name,
                                            plot2_file_name):
-        
-        plot1_file_name = 'plot1' + str(message.chat.id) + '.png'
-        plot2_file_name = 'plot2' + str(message.chat.id) + '.png'
-        word_cloud_file_name = 'wcloud' + str(message.chat.id) + '.png'
-        
         if statistic_type == 'topic':
             
             bot.send_message(message.chat.id,
