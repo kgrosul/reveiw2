@@ -100,61 +100,36 @@ def send_doc_text(message):
                          "Введите корректное название документа")
 
 
-def describe_doc(message):
+def show_statistic(message):
     """
-    Отпраляет статистику по документу
+    Отпраляет статистику по теме или документу
     :param message: сообщение, в котором содержится информация о чате
     :return: None
     """
     plot1_file_name = 'plot1' + str(message.chat.id) + '.png'
     plot2_file_name = 'plot2' + str(message.chat.id) + '.png'
     word_cloud_file_name = 'wcloud' + str(message.chat.id) + '.png'
-    result = make_request.make_distribution_plot(message.text,
-                                                 'document',
-                                                 plot1_file_name,
-                                                 plot2_file_name
-                                                 )
-    if result:
-        with open(plot1_file_name, 'rb') as plot1:
-            bot.send_photo(message.chat.id, plot1)
-        with open(plot2_file_name, 'rb') as plot2:
-            bot.send_photo(message.chat.id, plot2)
-        make_request.document_word_cloud(message.text,
-                                         word_cloud_file_name)
-        with open(word_cloud_file_name, 'rb') as word_cloud:
-            bot.send_photo(message.chat.id, word_cloud)
-        os.remove(plot1_file_name)
-        os.remove(plot2_file_name)
-        os.remove(word_cloud_file_name)
+    if user_request[message.chat.id] == 'describe_topic':
+        statistic_type = 'topic'
     else:
-        bot.send_message(message.chat.id,
-                         "Введите корректное название документа")
+        statistic_type = 'document'
+         
+    if make_request.make_distribution_plot(message.text,
+                                           statistic_type,
+                                           plot1_file_name,
+                                           plot2_file_name):
+        
+        if statistic_type == 'topic':
+            
+            bot.send_message(message.chat.id,
+                             "Средняя длина документа: " + 
+                             str(make_request.
+                                 get_avg_document_len(message.text)))
 
-
-def describe_topic(message):
-    """
-    Отпраляет статистику по теме
-    :param message: сообщение, в котором содержится информация о чате
-    :return: None
-    """
-    plot1_file_name = 'plot1' + str(message.chat.id) + '.png'
-    plot2_file_name = 'plot2' + str(message.chat.id) + '.png'
-    word_cloud_file_name = 'wcloud' + str(message.chat.id) + '.png'
-    result = make_request.make_distribution_plot(message.text,
-                                                 'topic',
-                                                 plot1_file_name,
-                                                 plot2_file_name
-                                                 )
-    if result:
-        bot.send_message(message.chat.id,
-                         "Средняя длина документа: " +
-                         str(make_request.
-                             get_avg_document_len(message.text)))
-
-        bot.send_message(message.chat.id,
-                         "Всего документов: " +
-                         str(make_request.
-                             get_documents_number(message.text)))
+            bot.send_message(message.chat.id,
+                             "Всего документов: " +
+                             str(make_request.
+                                 get_documents_number(message.text)))
 
         with open(plot1_file_name, 'rb') as plot1:
             bot.send_photo(message.chat.id, plot1)
@@ -167,9 +142,10 @@ def describe_topic(message):
         os.remove(plot1_file_name)
         os.remove(plot2_file_name)
         os.remove(word_cloud_file_name)
+        
     else:
         bot.send_message(message.chat.id,
-                         "Введите корректное название темы")
+                         "Введите корректное название")
 
 replies = {'new_docs': 'Сколько документов надо вывести?',
            'new_topics': 'Сколько тем надо вывести?',
@@ -207,8 +183,8 @@ commands = {'new_docs': 'send_new_docs(message)',
             'topic': 'send_topic_description(message)',
             'words': 'send_words(message)',
             'doc': 'send_doc_text(message)',
-            'describe_doc': 'describe_doc(message)',
-            'describe_topic': 'describe_topic(message)'}
+            'describe_doc': 'show_statistic(message)',
+            'describe_topic': 'show_statistic(message)'}
 
 
 @bot.message_handler(content_types=['text'])
