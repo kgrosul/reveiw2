@@ -8,7 +8,12 @@ import pandas as pd
 import json
 import matplotlib
 import wordcloud
+import config
 import stop_words
+
+
+matplotlib.use('Agg')
+
 import matplotlib.pyplot as plt
 
 
@@ -80,18 +85,21 @@ def get_document_text(document_title):
 def make_plot(data, label, xlabel, ylabel):
     """
     Создает график и возвращает его
-    :param data: данные в виде list
+    :param data: данные в виде dict
     :param label: название графика
     :param xlabel: название оси X
     :param ylabel: название оси Y
     """
+
     data_frame = pd.DataFrame(data)
-    plot = data_frame.plot(kind="line",
+    plot = data_frame.plot(kind="bar",
                            title=label,
-                           colormap='jet')
+                           colormap='jet',
+                           legend=None)
 
     plot.set_xlabel(xlabel)
     plot.set_ylabel(ylabel)
+    plot.set_xlim(1)
 
     return plot
 
@@ -126,7 +134,9 @@ def make_distribution_plot(title_or_name, object, file_name1, file_name2):
     plt.savefig(file_name1)
     plt.close()
 
-    make_plot(data=json.loads(statistic.get().occurrences_distribution),
+    make_plot(data=[0] + json.loads(statistic.get().
+                              occurrences_distribution)[config.min_occurrence:
+                                                        config.max_occurrence],
               label="Распределение частот слов",
               xlabel='Встречаемость слова',
               ylabel='Количество слов с такой встречаемостью'
@@ -194,9 +204,9 @@ def make_word_cloud(text, file_name):
     :return: None
     """
     stopwords = set(stop_words.get_stop_words('ru'))
-    word_cloud = wordcloud.WordCloud(max_words=200,
-                                     height=960,
-                                     width=960,
+    word_cloud = wordcloud.WordCloud(max_words=config.cloud_max_words,
+                                     height=config.picture_height,
+                                     width=config.picture_width,
                                      background_color='white',
                                      stopwords=stopwords).generate(text)
 
