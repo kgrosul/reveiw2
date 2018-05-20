@@ -12,7 +12,7 @@ bot = telebot.TeleBot('582824205:AAGaNsND2bCU6XtJ_x9VQjpzd0dNfqq3yhA')
 def send_new_docs(message):
     """
     Отпраляет самые свежие документы
-    :param message: сообщение, в котором содержится информация о чате
+    :param message: сообщение, на которое надо ответить
     :return: None
     """
     if message.text.isdigit():
@@ -29,7 +29,7 @@ def send_new_docs(message):
 def send_new_topics(message):
     """
     Отпраляет самые свежие темы
-    :param message: сообщение, в котором содержится информация о чате
+    :param message: сообщение, на которое надо ответить
     :return: None
     """
     if message.text.isdigit():
@@ -47,7 +47,7 @@ def send_new_topics(message):
 def send_topic_description(message):
     """
     Отпраляет описание темы и 5 свежих новостей из нее
-    :param message: сообщение, в котором содержится информация о чате
+    :param message: сообщение, на которое надо ответить
     :return: None
     """
     description = make_request.get_topic_description(message.text)
@@ -70,7 +70,7 @@ def send_topic_description(message):
 def send_words(message):
     """
     Отпраляет 5 слов лучше всего описывающих данную тему
-    :param message: сообщение, в котором содержится информация о чате
+    :param message: сообщение, на которое надо ответить
     :return: None
     """
     tags = make_request.get_best_words(message.text, 5)
@@ -86,7 +86,7 @@ def send_words(message):
 def send_doc_text(message):
     """
     Отпраляет текст документа
-    :param message: сообщение, в котором содержится информация о чате
+    :param message: сообщение, на которое надо ответить
     :return: None
     """
     text = make_request.get_document_text(message.text)
@@ -103,7 +103,7 @@ def send_doc_text(message):
 def show_statistic(message):
     """
     Отпраляет статистику по теме или документу
-    :param message: сообщение, в котором содержится информация о чате
+    :param message: сообщение, на которое надо ответить
     :return: None
     """
     if user_request[message.chat.id] == 'describe_topic':
