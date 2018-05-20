@@ -10,6 +10,8 @@ import matplotlib
 import wordcloud
 import config
 import stop_words
+import pymorphy2
+import re
 
 
 matplotlib.use('Agg')
@@ -176,9 +178,9 @@ def get_avg_document_len(topic_name):
 
 def get_best_words(topic_name, number):
     """
-    Возвращает самые популярные теги для данной темы
+    Возвращает слова лучше всего описывающее эту тему
     :param topic_name: название темы
-    :param number: количество тегов
+    :param number: количество слов
     :return: list из тегов или None, если темы не существует
     """
     if len(Topic.select().where(Topic.name == topic_name)) == 0:
@@ -186,14 +188,17 @@ def get_best_words(topic_name, number):
     documents = Document.select().\
         where(Document.topic == Topic.select().
               where(Topic.name == topic_name))
-    tags_dict = defaultdict(lambda: 0)
-    for document in documents:
-        for tag in Tag.select().where(Tag.document == document):
-            tags_dict[tag.name] += 1
+    word_occurrence = defaultdict(lambda: 0)
+    words = re.findall(r'\w+', ' '.join(document.title for document in documents))
+    morph = pymorphy2.MorphAnalyzer()
+    for word in words:
+        morph_information = morph.parse(word)[0]
+        if 'NOUN' in morph_information.tag or 'UNKN' in morph_information.tag:
+            word_occurrence[str(morph_information.normal_form)] += 1
 
-    tag_list = [tag for tag in tags_dict]
-    tag_list.sort(key=lambda tag: -tags_dict[tag])
-    return tag_list[:number]
+    word_list = [word for word in word_occurrence]
+    word_list.sort(key=lambda tag: -word_occurrence[tag])
+    return word_list[:number]
 
 
 def make_word_cloud(text, file_name):
@@ -244,3 +249,6 @@ def document_word_cloud(document_title, file_name):
     text = document.get().text
     make_word_cloud(text, file_name)
     return True
+
+
+print(get_best_words("Война санкций", 5))
