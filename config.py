@@ -1,9 +1,14 @@
-max_occurrence = 15
-min_occurrence = 2
+MAX_OCCURRENCE = 15
+MIN_OCCURRENCE = 2
 
-picture_width = 960
-picture_height = 960
+PICTURE_WIDTH = 960
+PICTURE_HEIGHT = 960
 
-cloud_max_words = 200
+CLOUD_MAX_WORDS = 200
 
-redirects = 100
+REDIRECTS = 100
+
+DEFAULT_NEW_DOCS = 5
+DEFAULT_NEW_TOPICS = 5
+
+BEST_WORDS_NUM = 5
