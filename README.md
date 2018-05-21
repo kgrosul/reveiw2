@@ -22,8 +22,4 @@
 * stop_words
 * dateparser
 * locale
-
-Пообщаться с ботом
--------------------------
-* https://t.me/RBKnewsBot
-* @RBKnewsBot
+* pymorphy2
