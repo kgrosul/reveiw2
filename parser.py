@@ -85,7 +85,6 @@ def calculate_statistic(text):
         deviation += (avg_occurrences_num - occurrences_per_word[word])**2
 
     deviation = (deviation/len(occurrences_per_word))**0.5
-    print(deviation)
     for word in occurrences_per_word:
         # Учитываем только те слова, значение для которых попадают нужный промежуток частотности
         if abs(avg_occurrences_num - occurrences_per_word[word]) < 3*deviation:
