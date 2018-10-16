@@ -1,18 +1,18 @@
-Бот и парсер для работы c https://www.rbc.ru/story/
+Bot for https://www.rbc.ru/story/ parsing
 ========================
 
-Что умеет бот?
+What is he ablt to do?
 -------------------------
-* /help - вывести информацию о себе
-* /new_docs - вывести самые свежие новости
-* /new_topics - вывести самые свежие темы
-* /topic - вывести описание темы и 5 свежих новостей оттуда
-* /words - вывести 5 слов лучше всего описывающих тему
-* /doc - вывести текст документа
-* /describe_doc - нарисовать графики распределения длины и частотности слов, а также облако слов для документа
-* /describe_topic - то же, что и предыдущее, но для всей темы
+* /help - list of features
+* /new_docs - the freshest new
+* /new_topics - the freshest topics
+* /topic - topic description
+* /words - 5 words best describes your topic
+* /doc - text of the documen
+* /describe_doc - statistics on the document
+* /describe_topic - statistics on the whole topic
 
-Какие библиотеки нужны для работы?
+Required libraries?
 -------------------------
 * telebot
 * peewee
