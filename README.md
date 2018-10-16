@@ -1,10 +1,10 @@
 Bot for https://www.rbc.ru/story/ parsing
 ========================
 
-What is he ablt to do?
+What is it able to do?
 -------------------------
 * /help - list of features
-* /new_docs - the freshest new
+* /new_docs - the freshest news
 * /new_topics - the freshest topics
 * /topic - topic description
 * /words - 5 words best describes your topic
