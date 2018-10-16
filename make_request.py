@@ -6,7 +6,6 @@ from peewee import fn
 from collections import defaultdict
 import pandas as pd
 import json
-import matplotlib
 import wordcloud
 import config
 import stop_words
@@ -17,9 +16,8 @@ import matplotlib.pyplot as plt
 
 def get_fresh_news(number):
     """
-    Получить самые свежие новости
-    :param number: количество новостей
-    :return: список из объектов типа <class 'data_base.Document'>
+    :param number: number of the news
+    :return: list of <class 'data_base.Document'>
     """
     return [document for document in Document.select().
             order_by(-Document.last_update)][:number]
@@ -27,9 +25,8 @@ def get_fresh_news(number):
 
 def get_fresh_topics(number):
     """
-    Получить самые свежие темы
-    :param number: количество тем
-    :return: список из объектов типа <class 'data_base.Topic'>
+    :param number: number of the topics
+    :return: list of <class 'data_base.Topic'>
     """
     topics = Topic().select().join(Document).\
         where(Topic.name == Document.topic and
@@ -42,9 +39,8 @@ def get_fresh_topics(number):
 
 def get_topic_description(topic_name):
     """
-    Опсание темы
-    :param topic_name: заголовок темы
-    :return: описание или None, если темы не существует
+    :param topic_name:
+    :return: string with description or None if the topic doesn't exist
     """
     response = Topic.select().where(Topic.name == topic_name)
     if len(response) == 0:
@@ -54,11 +50,10 @@ def get_topic_description(topic_name):
 
 def get_topic_fresh_news(topic_name, number):
     """
-    Получить самые свежие новости для данной темы
-    :param topic_name: название темы
-    :param number: количество новостей
-    :return: список из объектов типа <class 'data_base.Document'> или None,
-            если темы не существует
+    gets the freshest news for the topic
+    :param topic_name:
+    :param number:
+    :return: list of <class 'data_base.Document'> or None if the topic doesn't exist
     """
     if len(Topic.select().where(Topic.name == topic_name)) == 0:
         return None
@@ -69,9 +64,8 @@ def get_topic_fresh_news(topic_name, number):
 
 def get_document_text(document_title):
     """
-    Получить текст данного документа
-    :param document_title: заголовог документа
-    :return: текст или None, если документа не существует
+    :param document_title:
+    :return: string with the text or None if the document doesn't exist
     """
     if len(Document.select().
             where(Document.title == document_title)) == 0:
@@ -82,11 +76,11 @@ def get_document_text(document_title):
 
 def make_plot(data, label, xlabel, ylabel):
     """
-    Создает график и возвращает его
-    :param data: данные в виде dict
-    :param label: название графика
-    :param xlabel: название оси X
-    :param ylabel: название оси Y
+    creates the plot and return them
+    :param data: dict of data
+    :param label: label of the plot
+    :param xlabel:  X axis label
+    :param ylabel: Y axis label
     """
 
     data_frame = pd.DataFrame(data)
@@ -104,12 +98,12 @@ def make_plot(data, label, xlabel, ylabel):
 
 def make_distribution_plot(title_or_name, object, file_name1, file_name2):
     """
-    Создает графики распределения для документа/темы
-    :param title_or_name: название
-    :param object: 'document' или 'topic'
-    :param file_name1: файл, куда сохранить первый график
-    :param file_name2: файл, куда сохранить второй график
-    :return: True - в случае удачного выполнения, False - иначе
+    creates plot of the distribution for the document/topic
+    :param title_or_name:
+    :param object: 'document' or 'topic'
+    :param file_name1: file to save first plot
+    :param file_name2: file to save second plot
+    :return: True - everything is OK, False - something went wrong
     """
     if object == 'document':
         statistic = DocumentStatistic.select().\
@@ -124,9 +118,9 @@ def make_distribution_plot(title_or_name, object, file_name1, file_name2):
     if len(statistic) == 0:
         return False
     make_plot(data=json.loads(statistic.get().length_distribution),
-              label="Распределение длины",
-              xlabel='Длина слова',
-              ylabel='Количество слов с такой длиной'
+              label='The length distribution',
+              xlabel="Word's length",
+              ylabel='Number of words with such length'
               )
 
     plt.savefig(file_name1)
@@ -136,9 +130,9 @@ def make_distribution_plot(title_or_name, object, file_name1, file_name2):
               loads(statistic.get().
                     occurrences_distribution)[config.MIN_OCCURRENCE:
                                               config.MAX_OCCURRENCE],
-              label="Распределение частот слов",
-              xlabel='Встречаемость слова',
-              ylabel='Количество слов с такой встречаемостью'
+              label="The frequency distribution of words",
+              xlabel='The frequency of the word',
+              ylabel='The number of words with that frequency'
               )
     plt.savefig(file_name2)
 
@@ -147,9 +141,9 @@ def make_distribution_plot(title_or_name, object, file_name1, file_name2):
 
 def get_documents_number(topic_name):
     """
-    Получить количество документов в теме
-    :param topic_name: название темы
-    :return: количество документов или None, если темы не существует
+    gets number of documents in the topic
+    :param topic_name:
+    :return: number of documents or None if the topic doesn't exist
     """
     statistic = TopicStatistic.select().\
         where(TopicStatistic.topic == Topic.select().
@@ -161,9 +155,9 @@ def get_documents_number(topic_name):
 
 def get_avg_document_len(topic_name):
     """
-    Получить среднюю длину документа теме
-    :param topic_name: название темы
-    :return: средяя длина или None, если темы не существует
+    gets the average length of a topic document
+    :param topic_name
+    :return: the average length or None if the topic doesn't exist
     """
     statistic = TopicStatistic.select().\
         where(TopicStatistic.topic == Topic.select().
@@ -175,10 +169,10 @@ def get_avg_document_len(topic_name):
 
 def get_best_words(topic_name, number):
     """
-    Возвращает слова лучше всего описывающее эту тему
-    :param topic_name: название темы
-    :param number: количество слов
-    :return: list из тегов или None, если темы не существует
+    gets the words that best describe the topic
+    :param topic_name:
+    :param number: number of words
+    :return: list of tags or None if the topic doesn't exist
     """
     if len(Topic.select().where(Topic.name == topic_name)) == 0:
         return None
@@ -200,9 +194,9 @@ def get_best_words(topic_name, number):
 
 def make_word_cloud(text, file_name):
     """
-    Строит облако слов по данному тексту
-    :param text: текст
-    :param file_name: файл, в который нужно сохранить облако
+    builds a cloud of words on this text
+    :param text:
+    :param file_name: file to save the wordcloud
     :return: None
     """
     stopwords = set(stop_words.get_stop_words('ru'))
@@ -219,10 +213,10 @@ def make_word_cloud(text, file_name):
 
 def topic_word_cloud(topic_name, file_name):
     """
-    Строит облако слов по всем документам данной темы
-    :param topic_name: название темы
-    :param file_name: файл, в который нужно сохранить облако
-    :return: True при удачном выполнении, False - иначе
+    builds a word cloud across all documents in a given topic
+    :param topic_name:
+    :param file_name: file to save the wordcloud
+    :return: True - everything is OK, False - something went wrong
     """
     documents = Document.select().\
         where(Document.topic == Topic.select().
@@ -236,10 +230,10 @@ def topic_word_cloud(topic_name, file_name):
 
 def document_word_cloud(document_title, file_name):
     """
-    Строит облако слов по тексту данного документа
-    :param document_title: заголовок документа
-    :param file_name: файл, в который нужно сохранить облако
-    :return: True при удачном выполнении, False - иначе
+    Build a word cloud across the text of this document
+    :param document_title:
+    :param file_name: file to save the wordcloud
+    :return: True - everything is OK, False - something went wrong
     """
     document = Document.select().where(Document.title == document_title)
     if len(document) == 0:

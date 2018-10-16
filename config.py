@@ -1,15 +1,29 @@
-MAX_OCCURRENCE = 15 # Макс. число вхождений в текст для слова 
-MIN_OCCURRENCE = 2 # Мин. число вхождений в текст для слова 
+MAX_OCCURRENCE = 15  # Max. number of occurrences in the text for a word
+MIN_OCCURRENCE = 2  # Min. number of occurrences in the text for a word
 
-PICTURE_WIDTH = 960 # Ширина картинки, отправляемой пользователю
-PICTURE_HEIGHT = 960 # Высота картинки, отправляемой пользователю
+PICTURE_WIDTH = 960
+PICTURE_HEIGHT = 960
 
-CLOUD_MAX_WORDS = 200 # Максимальное количество слов в WordCloud
+CLOUD_MAX_WORDS = 200  # Max amount of words in  WordCloud
 
-REDIRECTS = 100 # Максимальное количество перенаправлений при парсинге
+REDIRECTS = 100  # Max amount of redirects during parsing
 
-DEFAULT_NEW_DOCS = 5 # Число свежих новостей, которое выводится по умолчанию
-DEFAULT_NEW_TOPICS = 5 # Число свежих тем, которое выводится по умолчанию
+DEFAULT_NEW_DOCS = 5
+DEFAULT_NEW_TOPICS = 5
 
-BEST_WORDS_NUM = 5 # Число слов для описания темы, которое выводится по умолчанию
-DEVIATION = 3 #Отклонение
+BEST_WORDS_NUM = 5  # Default words number to describe the topic
+
+DEVIATION = 3
+
+CORRECT_NAME_REQUEST = "Please еnter the correct title"
+CORRECT_NUMBER_REQUEST = "Please еnter the correct number"
+
+HELP = "Hello! Here's what you can do with the bot:\n" + \
+           "/help - list of features\n" + \
+           "/new_docs - the freshest news\n" + \
+           "/new_topics - the freshest topics\n" + \
+           "/topic - topic description\n" + \
+           "/words - 5 words best describes your topic\n" + \
+           "/doc - text of the document\n" + \
+           "/describe_doc - statistics on the document \n" + \
+           "/describe_topic - statistics on the topic"

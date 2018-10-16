@@ -12,10 +12,10 @@ bot = telebot.TeleBot('582824205:AAGaNsND2bCU6XtJ_x9VQjpzd0dNfqq3yhA')
 
 def send_new_docs(chat_id, str_number):
     """
-    Отправляет заданному пользователю определенное количество самых свежих новостей
-    или, если необходимо, просьбу ввести корректные данные
-    :param chat_id: id пользователя
-    :param str_number: количество новостей
+    Sends str_number of fresh news to user with char_id or
+    ask him to еnter the correct number
+    :param chat_id: user's id
+    :param str_number: amount of news
     :return: None
     """
     if str_number == '':
@@ -28,16 +28,15 @@ def send_new_docs(chat_id, str_number):
             bot.send_message(chat_id, response_text)
         del user_request[chat_id]
     else:
-        bot.send_message(chat_id,
-                         "Введите корректное число")
+        bot.send_message(chat_id, config.CORRECT_NUMBER_REQUEST)
 
 
 def send_new_topics(chat_id, str_number):
     """
-    Отправляет заданному пользователю определенное количество самых свежих тем
-    или, если необходимо, просьбу ввести корректные данные
-    :param chat_id: id пользователя
-    :param str_number: количество тем
+    Sends str_number of fresh topics to user with char_id or
+    ask him to еnter the correct number
+    :param chat_id: user's id
+    :param str_number: amount of topics
     :return: None
     """
     if str_number == '':
@@ -52,16 +51,15 @@ def send_new_topics(chat_id, str_number):
         del user_request[chat_id]
 
     else:
-        bot.send_message(chat_id,
-                         "Введите корректное число")
+        bot.send_message(chat_id, config.CORRECT_NUMBER_REQUEST)
 
 
 def send_topic_description(chat_id, topic_name):
     """
-    Отправляет заданному пользователю описание определенной темы
-    или, если необходимо, просьбу ввести корректные данные
-    :param chat_id: id пользователя
-    :param topic_name: название темы
+    Sends the description of the topic with topic_name to
+    user with char_id or ask him to еnter the correct number
+    :param chat_id: user's id
+    :param topic_name:
     :return: None
     """
     description = make_request.get_topic_description(topic_name)
@@ -78,16 +76,15 @@ def send_topic_description(chat_id, topic_name):
         del user_request[chat_id]
 
     else:
-        bot.send_message(chat_id,
-                         "Введите корректное название темы")
+        bot.send_message(chat_id, config.CORRECT_NAME_REQUEST)
 
 
 def send_words(chat_id, topic_name):
     """
-    Отправляет заданному пользователю 5 слов лушче всего описывающих тем
-    или, если необходимо, просьбу ввести корректные данные
-    :param chat_id: id пользователя
-    :param topic_name: название темы
+    Sends the  user 5 words best describing topics
+    or ask him to еnter the correct topic name
+    :param chat_id:
+    :param topic_name:
     :return: None
     """
     words = make_request.get_best_words(topic_name, config.BEST_WORDS_NUM)
@@ -98,16 +95,15 @@ def send_words(chat_id, topic_name):
         del user_request[chat_id]
 
     else:
-        bot.send_message(chat_id,
-                         "Введите корректное название темы")
+        bot.send_message(chat_id, config.CORRECT_NAME_REQUEST)
 
 
 def send_doc_text(chat_id, doc_title):
     """
-    Отправляет заданному пользователю текст документа
-    или, если необходимо, просьбу ввести корректные данные
-    :param chat_id: id пользователя
-    :param doc_title: название темы
+    Sends the text of the document to the
+    user or ask him to еnter the correct title
+    :param chat_id:
+    :param doc_title:
     :return: None
     """
     text = make_request.get_document_text(doc_title)
@@ -118,16 +114,15 @@ def send_doc_text(chat_id, doc_title):
         del user_request[chat_id]
 
     else:
-        bot.send_message(chat_id,
-                         "Введите корректное название документа")
+        bot.send_message(chat_id, config.CORRECT_NAME_REQUEST)
 
 
 def show_statistic(chat_id, item_title):
     """
-    Отправляет заданному пользователю статистику по теме или по документу
-    или, если необходимо, просьбу ввести корректные данные
-    :param chat_id: id пользователя
-    :param item_title: название темы/документа
+    Sends the statistics on the item to the
+    user or ask him to еnter the correct title
+    :param chat_id:
+    :param item_title: title of a document or a topic
     :return: None
     """
     if user_request[chat_id] == 'describe_topic':
@@ -146,12 +141,12 @@ def show_statistic(chat_id, item_title):
         if statistic_type == 'topic':
 
             bot.send_message(chat_id,
-                             "Средняя длина документа: " +
+                             "Average document length: " +
                              str(make_request.
                                  get_avg_document_len(item_title)))
 
             bot.send_message(chat_id,
-                             "Всего документов: " +
+                             "Total documents: " +
                              str(make_request.
                                  get_documents_number(item_title)))
             make_request.topic_word_cloud(item_title,
@@ -174,10 +169,8 @@ def show_statistic(chat_id, item_title):
         del user_request[chat_id]
 
     else:
-        bot.send_message(chat_id,
-                         "Введите корректное название")
+        bot.send_message(chat_id, config.CORRECT_NAME_REQUEST)
 
-# каждая команда переданная боту влечет за собой вызов определенной функциц
 commands = {'new_docs': 'send_new_docs(message.chat.id, argument)',
             'new_topics': 'send_new_topics(message.chat.id, argument)',
             'topic': 'send_topic_description(message.chat.id, argument)',
@@ -190,36 +183,25 @@ commands = {'new_docs': 'send_new_docs(message.chat.id, argument)',
 @bot.message_handler(commands=['new_docs', 'new_topics', 'topic', 'words',
                                'doc', 'describe_doc', 'describe_topic'])
 def reply(message):
-    """Обрабатываем сообщения, которые начинаются с команды"""
+    """process messages that start with the command"""
     status = message.text.split()[0][1:]
     user_request[message.chat.id] = status
-    argument = message.text[len(status)+1:].strip()
     eval(commands[user_request[message.chat.id]])
 
 
 @bot.message_handler(commands=['help', 'start'])
 def reply_to_help_start(message):
-    """Выводим справку"""
-    text = "Привет! Вот что умеет бот:\n" + \
-           "/help - список возможностей\n" + \
-           "/new_docs - самые свежие новости\n" + \
-           "/new_topics - самые свежие темы\n" + \
-           "/topic - описание темы\n" + \
-           "/words - 5 слов лучше всего описывающих тему\n" + \
-           "/doc - текст документа\n" + \
-           "/describe_doc - статистика по документу\n" + \
-           "/describe_topic - статистика по теме"
-    bot.send_message(message.chat.id, text)
+    """process messages that start with the help command"""
+    bot.send_message(message.chat.id, config.HELP)
 
 
 @bot.message_handler(content_types=['text'])
 def reply_to_text(message):
-    """Обрабатываем сообщения без команды в начале"""
+    """process messages that start with no commands"""
     if message.chat.id in user_request:
-        argument = message.text.strip()
         eval(commands[user_request[message.chat.id]])
     else:
-        bot.send_message(message.chat.id, "Введите комнаду")
+        bot.send_message(message.chat.id, "Insert the command")
 
 
 if __name__ == '__main__':
@@ -227,4 +209,4 @@ if __name__ == '__main__':
         try:
             bot.polling(none_stop=True)
         except requests.exceptions.ReadTimeout:
-            print("А вот сейчас бот упал из-за polling")
+            print("ReadTimeout")
