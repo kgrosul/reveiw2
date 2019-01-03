@@ -12,7 +12,7 @@ bot = telebot.TeleBot('582824205:AAGaNsND2bCU6XtJ_x9VQjpzd0dNfqq3yhA')
 
 def send_new_docs(chat_id, str_number):
     """
-    Sends str_number of fresh news to user with char_id or
+    Send str_number of fresh news to the user with char_id or
     ask him to еnter the correct number
     :param chat_id: user's id
     :param str_number: amount of news
@@ -33,7 +33,7 @@ def send_new_docs(chat_id, str_number):
 
 def send_new_topics(chat_id, str_number):
     """
-    Sends str_number of fresh topics to user with char_id or
+    Send str_number of fresh topics to user with char_id or
     ask him to еnter the correct number
     :param chat_id: user's id
     :param str_number: amount of topics
@@ -56,7 +56,7 @@ def send_new_topics(chat_id, str_number):
 
 def send_topic_description(chat_id, topic_name):
     """
-    Sends the description of the topic with topic_name to
+    Send the description of the topic with topic_name to the
     user with char_id or ask him to еnter the correct number
     :param chat_id: user's id
     :param topic_name:
@@ -81,7 +81,7 @@ def send_topic_description(chat_id, topic_name):
 
 def send_words(chat_id, topic_name):
     """
-    Sends the  user 5 words best describing topics
+    Send to the user 5 words describing the topic
     or ask him to еnter the correct topic name
     :param chat_id:
     :param topic_name:
@@ -100,7 +100,7 @@ def send_words(chat_id, topic_name):
 
 def send_doc_text(chat_id, doc_title):
     """
-    Sends the text of the document to the
+    Send the text of the document to the
     user or ask him to еnter the correct title
     :param chat_id:
     :param doc_title:
@@ -119,7 +119,7 @@ def send_doc_text(chat_id, doc_title):
 
 def show_statistic(chat_id, item_title):
     """
-    Sends the statistics on the item to the
+    Send the statistics on the item to the
     user or ask him to еnter the correct title
     :param chat_id:
     :param item_title: title of a document or a topic
