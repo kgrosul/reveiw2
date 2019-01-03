@@ -15,7 +15,7 @@ updated_topics = set()
 
 def parse_and_save_topics():
     """
-    parses topics and, if necessary, adds them to the database
+    parse topics and, if necessary, adds them to the database
     :return: None
     """
     session = requests.Session()
@@ -103,7 +103,7 @@ def calculate_statistic(text):
 
 def save_document_statistic(document):
     """
-    collects and stores statistics for a document in the database
+    collect and store statistics for a document in the database
     :param document:
     :return: None
     """
@@ -122,7 +122,7 @@ def save_document_statistic(document):
 
 def save_topic_statistic(topic_name):
     """
-    collects and save statistics on this topic in the database
+    collect and save statistics on this topic in the database
     :param topic_name: название темы
     :return: None
     """
@@ -153,7 +153,7 @@ def save_topic_statistic(topic_name):
 
 def parse_ans_save_documents(topic_name):
     """
-    parses all documents for this topic
+    parse all documents for this topic
     and if necessary, add them to the database
     :param topic_name:
     :return: None
