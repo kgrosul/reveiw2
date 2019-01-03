@@ -50,7 +50,7 @@ def get_topic_description(topic_name):
 
 def get_topic_fresh_news(topic_name, number):
     """
-    gets the freshest news for the topic
+    get the freshest news for the topic
     :param topic_name:
     :param number:
     :return: list of <class 'data_base.Document'> or None if the topic doesn't exist
@@ -76,7 +76,7 @@ def get_document_text(document_title):
 
 def make_plot(data, label, xlabel, ylabel):
     """
-    creates the plot and return them
+    create the plot and return it
     :param data: dict of data
     :param label: label of the plot
     :param xlabel:  X axis label
@@ -98,7 +98,7 @@ def make_plot(data, label, xlabel, ylabel):
 
 def make_distribution_plot(title_or_name, object, file_name1, file_name2):
     """
-    creates plot of the distribution for the document/topic
+    create plot of the distribution for the document/topic
     :param title_or_name:
     :param object: 'document' or 'topic'
     :param file_name1: file to save first plot
@@ -141,7 +141,7 @@ def make_distribution_plot(title_or_name, object, file_name1, file_name2):
 
 def get_documents_number(topic_name):
     """
-    gets number of documents in the topic
+    get number of documents in the topic
     :param topic_name:
     :return: number of documents or None if the topic doesn't exist
     """
@@ -155,7 +155,7 @@ def get_documents_number(topic_name):
 
 def get_avg_document_len(topic_name):
     """
-    gets the average length of a topic document
+    get the average length of a topic document
     :param topic_name
     :return: the average length or None if the topic doesn't exist
     """
@@ -169,7 +169,7 @@ def get_avg_document_len(topic_name):
 
 def get_best_words(topic_name, number):
     """
-    gets the words that best describe the topic
+    get words that describe the topic
     :param topic_name:
     :param number: number of words
     :return: list of tags or None if the topic doesn't exist
@@ -194,7 +194,7 @@ def get_best_words(topic_name, number):
 
 def make_word_cloud(text, file_name):
     """
-    builds a cloud of words on this text
+    build a cloud of words on this text
     :param text:
     :param file_name: file to save the wordcloud
     :return: None
@@ -213,7 +213,7 @@ def make_word_cloud(text, file_name):
 
 def topic_word_cloud(topic_name, file_name):
     """
-    builds a word cloud across all documents in a given topic
+    build a word cloud across all documents in a given topic
     :param topic_name:
     :param file_name: file to save the wordcloud
     :return: True - everything is OK, False - something went wrong
@@ -230,7 +230,7 @@ def topic_word_cloud(topic_name, file_name):
 
 def document_word_cloud(document_title, file_name):
     """
-    Build a word cloud across the text of this document
+    build a word cloud across the text of this document
     :param document_title:
     :param file_name: file to save the wordcloud
     :return: True - everything is OK, False - something went wrong
