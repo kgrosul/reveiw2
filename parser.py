@@ -29,7 +29,7 @@ def parse_and_save_topics():
         title = topic.find('span', {'class': 'item__title'}).text.strip()
         description = topic.find('span', {'class': 'item__text'}).text.strip()
         # checks that the theme is not yet in the database
-        if len(Topic.select().where(Topic.name == title)) == 0:
+        if len(Topic.select().where(Topic.url == url)) == 0:
             Topic.create(url=url,
                          name=title,
                          description=description)
